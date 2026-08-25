@@ -63,6 +63,7 @@ export const Route = createFileRoute("/")({
       ogTitle: "Labské nábřeží Štětí — historie, fotografie a příběhy",
       ogDescription:
         "Historické i současné fotografie nábřeží ve Štětí, proměny břehu Labe a příběhy místa.",
+         image: "/images/nabrezi2.webp",
     }),
     scripts: [
       webPageJsonLd(
