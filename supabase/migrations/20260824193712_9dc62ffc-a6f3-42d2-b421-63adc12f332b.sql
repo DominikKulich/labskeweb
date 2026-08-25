@@ -1,0 +1,1 @@
+update public.photos set image_url = '/demo/dnes-2024.jpg' where image_url = '/demo/dnes.jpg';
