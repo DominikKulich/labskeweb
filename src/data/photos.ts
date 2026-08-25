@@ -1,47 +1,30 @@
 import type { Photo } from "./types";
 
-// Fotografie Štětí (CDN pointery)
-import privozAsset from "@/assets/privoz_beztextu.webp.asset.json";
-import mostStavbaAsset from "@/assets/most_beztextu.webp.asset.json";
-import plovarna1930Asset from "@/assets/plovarna1930.webp.asset.json";
-import plovarnaOldAsset from "@/assets/plovarnaold.webp.asset.json";
-import plovarna2Asset from "@/assets/plovarna2.webp.asset.json";
-import kozeluznaAsset from "@/assets/kozeluzna.webp.asset.json";
-import povodneAsset from "@/assets/povodne.webp.asset.json";
-import lodAsset from "@/assets/lod.webp.asset.json";
-import lod2Asset from "@/assets/lod2.webp.asset.json";
-import retroSteti from "@/assets/retro_steti.webp.asset.json";
-import retro2 from "@/assets/retro2.png.asset.json";
-import nabrezi1 from "@/assets/nabrezi1.webp.asset.json";
-import nabrezi2 from "@/assets/nabrezi2.webp.asset.json";
-import nabrezi3 from "@/assets/nabrezi3.webp.asset.json";
-import nabrezi4 from "@/assets/nabrezi4.webp.asset.json";
-import nabrezi5 from "@/assets/nabrezi5.webp.asset.json";
-import parkAsset from "@/assets/park.webp.asset.json";
-
 export const images = {
-  hero: nabrezi2.url,
+  hero: "/images/nabrezi2.webp",
+
   // historie
-  privoz: privozAsset.url,
-  mostStavba: mostStavbaAsset.url,
-  plovarna: plovarna1930Asset.url,
-  plovarna2: plovarna2Asset.url,
-  kozeluzna: kozeluznaAsset.url,
-  povoden: povodneAsset.url,
-  lod: lodAsset.url,
-  pristav: lod2Asset.url,
-  retroSteti: retroSteti.url,
-  retroPruvod: retro2.url,
+  privoz: "/images/privoz_beztextu.webp",
+  mostStavba: "/images/most_beztextu.webp",
+  plovarna: "/images/plovarna1930.webp",
+  plovarna2: "/images/plovarna2.webp",
+  kozeluzna: "/images/kozeluzna.webp",
+  povoden: "/images/povodne.webp",
+  lod: "/images/lod.webp",
+  pristav: "/images/lod2.webp",
+  retroSteti: "/images/retro_steti.webp",
+  retroPruvod: "/images/retro2.png",
+
   // současnost
-  tehdy: plovarnaOldAsset.url,
-  dnes: parkAsset.url,
-  park: parkAsset.url,
-  labeMlha: nabrezi2.url,
-  mostDnes: nabrezi3.url,
-  promenada: nabrezi5.url,
-  nabrezi1: nabrezi1.url,
-  nabrezi4: nabrezi4.url,
-  detiUReky: kozeluznaAsset.url,
+  tehdy: "/images/plovarnaold.webp",
+  dnes: "/images/park.webp",
+  park: "/images/park.webp",
+  labeMlha: "/images/nabrezi2.webp",
+  mostDnes: "/images/nabrezi3.webp",
+  promenada: "/images/nabrezi5.webp",
+  nabrezi1: "/images/nabrezi1.webp",
+  nabrezi4: "/images/nabrezi4.webp",
+  detiUReky: "/images/kozeluzna.webp",
 };
 
 /**
