@@ -12,7 +12,7 @@ export const images = {
   povoden: "/images/povodne.webp",
   lod: "/images/lod.webp",
   pristav: "/images/lod2.webp",
-  retroSteti: "/images/retro_steti.webp",
+  retroSteti: "/images/retrosteti.webp",
   retroPruvod: "/images/retro2.png",
 
   // současnost
