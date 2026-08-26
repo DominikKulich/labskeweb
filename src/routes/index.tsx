@@ -11,7 +11,7 @@ import {
 } from "@/lib/cms";
 
 import { images, photos } from "@/data/photos";
-import { stories } from "@/data/stories";
+
 import { BeforeAfter } from "@/components/site/BeforeAfter";
 import { GalleryGrid } from "@/components/site/GalleryGrid";
 import { Reveal } from "@/components/site/Reveal";
@@ -114,7 +114,7 @@ function Index() {
   const latestNews = (newsRows ?? []).slice(0, 2);
   const galleryPhotos = photoRows?.length ? photoRows.map(photoRowToPhoto) : photos;
   const featuredPhotos = mixFeaturedPhotos(galleryPhotos, galleryPhotos.length);
-  const featuredStories = articleRows?.length ? articleRows.map(articleRowToStory) : stories;
+  const featuredStories = (articleRows ?? []).map(articleRowToStory);
 
 
   return (
@@ -297,20 +297,29 @@ function Index() {
       </section>
 
       {/* PŘÍBĚHY */}
-      <section className="border-y border-border bg-paper">
-        <div className="mx-auto max-w-[1280px] px-5 py-20 sm:px-8 sm:py-28">
-          <Reveal>
-            <SectionHeading eyebrow="Texty" title="Příběhy od Labe" />
+     {featuredStories.length > 0 && (
+  <section className="border-y border-border bg-paper">
+    <div className="mx-auto max-w-[1280px] px-5 py-20 sm:px-8 sm:py-28">
+      <Reveal className="flex flex-wrap items-end justify-between gap-6">
+        <SectionHeading eyebrow="Texty" title="Příběhy od Labe" />
+        <Link
+          to="/pribehy"
+          className="text-[0.75rem] font-medium uppercase tracking-[0.16em]"
+        >
+          <span className="link-editorial">Všechny příběhy</span>
+        </Link>
+      </Reveal>
+
+      <div className="mt-14 grid gap-12 md:grid-cols-3 md:gap-8">
+        {featuredStories.slice(0, 3).map((s, i) => (
+          <Reveal key={s.id} delay={i * 90}>
+            <StoryCard story={s} />
           </Reveal>
-          <div className="mt-14 grid gap-12 md:grid-cols-3 md:gap-8">
-            {featuredStories.slice(0, 3).map((s, i) => (
-              <Reveal key={s.id} delay={i * 90}>
-                <StoryCard story={s} />
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
 
       {/* O PROJEKTU */}
       <section className="bg-background">
