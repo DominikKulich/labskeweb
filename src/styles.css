@@ -19,7 +19,7 @@
   --radius-3xl: 10px;
   --radius-4xl: 12px;
 
-  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-display: "Bricolage Grotesque", "Work Sans", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Work Sans", ui-sans-serif, system-ui, sans-serif;
 
   --color-background: var(--background);
@@ -163,8 +163,9 @@
   h4,
   blockquote {
     font-family: var(--font-display);
-    font-weight: 400;
-    letter-spacing: -0.015em;
+    font-weight: 500;
+    font-variation-settings: "wdth" 92;
+    letter-spacing: -0.025em;
   }
 
   ::selection {

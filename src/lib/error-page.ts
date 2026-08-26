@@ -18,11 +18,12 @@ export function renderErrorPage(): string {
   </head>
   <body>
     <div class="card">
-      <h1>This page didn't load</h1>
-      <p>Something went wrong on our end. You can try refreshing or head back home.</p>
+      <h1>Stránku se nepodařilo načíst</h1>
+      <p>Došlo k neočekávané chybě. Zkuste stránku načíst znovu nebo se vraťte na úvod.</p>
       <div class="actions">
-        <button class="primary" onclick="location.reload()">Try again</button>
-        <a class="secondary" href="/">Go home</a>
+        <button class="primary" onclick="location.reload()">Zkusit znovu</button>
+        <a class="secondary" href="/">Zpět na úvod</a>
+
       </div>
     </div>
   </body>

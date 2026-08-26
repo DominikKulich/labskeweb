@@ -77,8 +77,8 @@ function PrispetPage() {
                 role="status"
                 className="mb-8 border-l-2 border-river bg-paper px-5 py-4 text-sm leading-relaxed"
               >
-                Děkujeme. Zprávu jsme přijali a ozveme se na uvedený e-mail. V této ukázkové verzi
-                se odesílání zatím jen zaznamenává — po zapnutí backendu poputuje rovnou do archivu.
+                Děkujeme. Zprávu jsme přijali a ozveme se na uvedený e-mail.
+
               </p>
             )}
 

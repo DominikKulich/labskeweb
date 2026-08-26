@@ -5,6 +5,7 @@ import type { Photo } from "@/data/types";
 import {
   articleRowToStory,
   fetchPublishedArticles,
+  fetchPublishedNews,
   fetchPublishedPhotos,
   photoRowToPhoto,
 } from "@/lib/cms";
@@ -16,6 +17,7 @@ import { GalleryGrid } from "@/components/site/GalleryGrid";
 import { Reveal } from "@/components/site/Reveal";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { StoryCard } from "@/components/site/StoryCard";
+import { NewsItem } from "@/components/site/NewsList";
 import { pageSeo, webPageJsonLd } from "@/lib/seo";
 
 function mixFeaturedPhotos(photos: Photo[], limit: number): Photo[] {
@@ -63,7 +65,7 @@ export const Route = createFileRoute("/")({
       ogTitle: "Labské nábřeží Štětí — historie, fotografie a příběhy",
       ogDescription:
         "Historické i současné fotografie nábřeží ve Štětí, proměny břehu Labe a příběhy místa.",
-         image: "/images/nabrezi2.webp",
+      image: "/images/nabrezi2.webp",
     }),
     scripts: [
       webPageJsonLd(
@@ -104,6 +106,12 @@ function Index() {
     queryFn: fetchPublishedArticles,
   });
 
+  const { data: newsRows } = useQuery({
+    queryKey: ["news", "published"],
+    queryFn: fetchPublishedNews,
+  });
+
+  const latestNews = (newsRows ?? []).slice(0, 2);
   const galleryPhotos = photoRows?.length ? photoRows.map(photoRowToPhoto) : photos;
   const featuredPhotos = mixFeaturedPhotos(galleryPhotos, galleryPhotos.length);
   const featuredStories = articleRows?.length ? articleRows.map(articleRowToStory) : stories;
@@ -135,7 +143,7 @@ function Index() {
           <h1 className="mt-5 max-w-4xl text-balance text-5xl leading-[0.98] text-primary-foreground sm:text-7xl lg:text-[5.5rem]">
             Labské nábřeží
           </h1>
-          <p className="mt-6 max-w-xl font-display text-xl italic text-primary-foreground/85 sm:text-2xl">
+          <p className="mt-6 max-w-xl font-display text-xl font-light text-primary-foreground/85 sm:text-2xl">
             Příběhy, proměny a vzpomínky z břehu Labe ve Štětí.
           </p>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
@@ -155,8 +163,42 @@ function Index() {
         </div>
       </section>
 
+      {/* AKTUÁLNĚ U LABE */}
+      {latestNews.length > 0 && (
+        <section className="bg-background">
+          <div className="mx-auto max-w-[1280px] px-5 py-20 sm:px-8 sm:py-28">
+            <div className="grid gap-10 lg:grid-cols-[minmax(0,0.55fr)_minmax(0,1.45fr)] lg:gap-16">
+              <Reveal>
+                <p className="eyebrow">Aktuálně u Labe</p>
+                <h2 className="mt-4 text-3xl leading-tight sm:text-[2.1rem]">
+                  Co se na nábřeží děje teď
+                </h2>
+                <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                  Nábřeží není jen archiv. Krátké zprávy o akcích, sportu, údržbě i dočasných
+                  omezeních.
+                </p>
+              </Reveal>
+              <Reveal delay={80}>
+                <div className="space-y-8">
+                  {latestNews.map((item) => (
+                    <NewsItem key={item.id} item={item} compact />
+                  ))}
+                </div>
+                <Link
+                  to="/aktualne"
+                  className="mt-10 inline-flex items-center gap-2 text-[0.75rem] font-medium uppercase tracking-[0.16em]"
+                >
+                  <span className="link-editorial">Všechny aktuality</span>
+                  <span aria-hidden>→</span>
+                </Link>
+              </Reveal>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* TEHDY A DNES */}
-      <section className="bg-background">
+      <section className="bg-paper">
         <div className="mx-auto max-w-[1280px] px-5 py-20 sm:px-8 sm:py-28">
           <div className="grid gap-12 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:gap-16">
             <Reveal>

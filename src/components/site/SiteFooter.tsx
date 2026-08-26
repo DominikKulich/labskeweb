@@ -7,7 +7,7 @@ export function SiteFooter() {
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
           <div>
             <p className="font-display text-2xl">
-              Labské <span className="italic opacity-75">nábřeží</span>
+              Labské <span className="font-light opacity-75">nábřeží</span>
             </p>
             <p className="mt-4 max-w-sm text-sm leading-relaxed opacity-70">
               Nezávislá vizuální kronika Labského nábřeží ve Štětí. Sbíráme fotografie,
@@ -22,6 +22,7 @@ export function SiteFooter() {
             <p className="eyebrow text-navy-foreground/60">Sekce</p>
             <ul className="mt-4 space-y-2 text-sm">
               {[
+                { to: "/aktualne", label: "Aktuálně" },
                 { to: "/historie", label: "Historie" },
                 { to: "/galerie", label: "Galerie" },
                 { to: "/pribehy", label: "Příběhy" },

@@ -206,7 +206,7 @@ export async function saveArticle(values: Partial<ArticleRow> & { title: string;
 }
 
 export async function setPublished(
-  table: "photos" | "articles",
+  table: "photos" | "articles" | "news",
   id: string,
   published: boolean,
 ) {
@@ -214,7 +214,10 @@ export async function setPublished(
   if (error) throw error;
 }
 
-export async function deleteRow(table: "photos" | "articles" | "submissions", id: string) {
+export async function deleteRow(
+  table: "photos" | "articles" | "submissions" | "news",
+  id: string,
+) {
   const { error } = await supabase.from(table).delete().eq("id", id);
   if (error) throw error;
 }
@@ -259,4 +262,55 @@ export async function uploadImage(file: File, folder = "uploads"): Promise<strin
   if (error) throw error;
   const { data: publicUrl } = supabase.storage.from("images").getPublicUrl(name);
   return publicUrl.publicUrl;
+}
+
+/* ---------- aktuality (news) ---------- */
+
+export interface NewsRow {
+  id: string;
+  title: string;
+  summary: string | null;
+  category: string;
+  starts_at: string;
+  image_url: string | null;
+  published: boolean;
+  is_demo: boolean;
+  sort_order: number;
+  created_at: string;
+}
+
+export async function fetchPublishedNews(): Promise<NewsRow[]> {
+  const { data, error } = await supabase
+    .from("news")
+    .select("*")
+    .eq("published", true)
+    .order("starts_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as NewsRow[];
+}
+
+export async function fetchAllNews(): Promise<NewsRow[]> {
+  const { data, error } = await supabase
+    .from("news")
+    .select("*")
+    .order("starts_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as NewsRow[];
+}
+
+export async function saveNews(values: Partial<NewsRow> & { title: string }) {
+  const payload = {
+    title: values.title,
+    summary: values.summary ?? null,
+    category: values.category ?? "Dění",
+    starts_at: values.starts_at ?? new Date().toISOString(),
+    image_url: values.image_url || null,
+    published: values.published ?? false,
+    sort_order: values.sort_order ?? 0,
+  };
+  const query = values.id
+    ? supabase.from("news").update(payload).eq("id", values.id)
+    : supabase.from("news").insert(payload);
+  const { error } = await query;
+  if (error) throw error;
 }

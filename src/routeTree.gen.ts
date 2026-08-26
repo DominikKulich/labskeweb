@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AktualneRouteImport } from './routes/aktualne'
 import { Route as GalerieRouteImport } from './routes/galerie'
 import { Route as HistorieRouteImport } from './routes/historie'
 import { Route as OProjektuRouteImport } from './routes/o-projektu'
@@ -23,6 +24,11 @@ import { Route as PribehySlugRouteImport } from './routes/pribehy.$slug'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AktualneRoute = AktualneRouteImport.update({
+  id: '/aktualne',
+  path: '/aktualne',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GalerieRoute = GalerieRouteImport.update({
@@ -73,6 +79,7 @@ const PribehySlugRoute = PribehySlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/aktualne': typeof AktualneRoute
   '/galerie': typeof GalerieRoute
   '/historie': typeof HistorieRoute
   '/o-projektu': typeof OProjektuRoute
@@ -85,6 +92,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/aktualne': typeof AktualneRoute
   '/galerie': typeof GalerieRoute
   '/historie': typeof HistorieRoute
   '/o-projektu': typeof OProjektuRoute
@@ -98,6 +106,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/aktualne': typeof AktualneRoute
   '/galerie': typeof GalerieRoute
   '/historie': typeof HistorieRoute
   '/o-projektu': typeof OProjektuRoute
@@ -112,6 +121,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/aktualne'
     | '/galerie'
     | '/historie'
     | '/o-projektu'
@@ -124,6 +134,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/aktualne'
     | '/galerie'
     | '/historie'
     | '/o-projektu'
@@ -136,6 +147,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/aktualne'
     | '/galerie'
     | '/historie'
     | '/o-projektu'
@@ -149,6 +161,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AktualneRoute: typeof AktualneRoute
   GalerieRoute: typeof GalerieRoute
   HistorieRoute: typeof HistorieRoute
   OProjektuRoute: typeof OProjektuRoute
@@ -167,6 +180,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/aktualne': {
+      id: '/aktualne'
+      path: '/aktualne'
+      fullPath: '/aktualne'
+      preLoaderRoute: typeof AktualneRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/galerie': {
@@ -237,6 +257,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AktualneRoute: AktualneRoute,
   GalerieRoute: GalerieRoute,
   HistorieRoute: HistorieRoute,
   OProjektuRoute: OProjektuRoute,

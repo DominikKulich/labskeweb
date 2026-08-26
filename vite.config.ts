@@ -12,7 +12,7 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
  */
 const isPagesBuild = process.env["PAGES_BUILD"] === "1";
 
-const PUBLIC_ROUTES = ["/", "/historie", "/galerie", "/pribehy", "/o-projektu", "/prispet"];
+const PUBLIC_ROUTES = ["/", "/aktualne", "/historie", "/galerie", "/pribehy", "/o-projektu", "/prispet"];
 
 /** Slugy publikovaných článků načtené přes veřejné (publishable) API v době buildu. */
 async function fetchArticlePaths(): Promise<string[]> {

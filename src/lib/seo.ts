@@ -1,5 +1,9 @@
 export const SITE_URL = "https://www.labskenabrezi.cz";
 export const SITE_NAME = "Labské nábřeží";
+/** Výchozí náhledový obrázek pro sdílení na sociálních sítích. */
+export const DEFAULT_OG_IMAGE = "/images/nabrezi2.webp";
+
+
 
 export function absoluteUrl(path: string): string {
   if (!path) return `${SITE_URL}/`;
@@ -40,11 +44,10 @@ export function pageSeo({
     { name: "twitter:title", content: ogTitle ?? title },
     { name: "twitter:description", content: ogDescription ?? description },
   ];
-  if (image) {
-    const abs = absoluteUrl(image);
-    meta.push({ property: "og:image", content: abs });
-    meta.push({ name: "twitter:image", content: abs });
-  }
+  const abs = absoluteUrl(image ?? DEFAULT_OG_IMAGE);
+  meta.push({ property: "og:image", content: abs });
+  meta.push({ name: "twitter:image", content: abs });
+
   return { meta, links: [{ rel: "canonical", href: url }] };
 }
 

@@ -145,7 +145,7 @@ function StoryDetail() {
         <div className="mx-auto max-w-[1280px] px-5 py-16 sm:px-8 sm:py-24">
           <div className="mx-auto max-w-[42rem]">
             {story.perex && (
-              <p className="font-display text-xl leading-relaxed italic text-foreground sm:text-2xl">
+              <p className="font-display text-xl font-light leading-relaxed text-foreground sm:text-2xl">
                 {story.perex}
               </p>
             )}
@@ -163,7 +163,7 @@ function StoryDetail() {
                   return (
                     <blockquote
                       key={i}
-                      className="border-l-2 border-river py-1 pl-6 text-xl leading-relaxed italic"
+                      className="border-l-2 border-river py-1 pl-6 text-xl font-light leading-relaxed"
                     >
                       <p>{block.text}</p>
                       {block.author && (
