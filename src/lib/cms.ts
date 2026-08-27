@@ -174,7 +174,7 @@ export async function savePhoto(values: Partial<PhotoRow> & { title: string; ima
     description: values.description ?? null,
     source: values.source ?? null,
     author: values.author ?? null,
-    category: values.category ?? "historie",
+    category: values.category || "historie",
     image_url: values.image_url,
     published: values.published ?? false,
     sort_order: values.sort_order ?? 0,
@@ -302,7 +302,7 @@ export async function saveNews(values: Partial<NewsRow> & { title: string }) {
   const payload = {
     title: values.title,
     summary: values.summary ?? null,
-    category: values.category ?? "Dění",
+    category: values.category || "Dění",
     starts_at: values.starts_at ?? new Date().toISOString(),
     image_url: values.image_url || null,
     published: values.published ?? false,
@@ -312,5 +312,112 @@ export async function saveNews(values: Partial<NewsRow> & { title: string }) {
     ? supabase.from("news").update(payload).eq("id", values.id)
     : supabase.from("news").insert(payload);
   const { error } = await query;
+  if (error) throw error;
+}
+
+/* ---------- kategorie (categories) ---------- */
+
+export type CategoryKind = "photo" | "news" | "article";
+
+export interface CategoryRow {
+  id: string;
+  kind: CategoryKind;
+  label: string;
+  value: string;
+  sort_order: number;
+  active: boolean;
+  created_at: string;
+}
+
+const CATEGORY_USAGE_TABLE: Record<CategoryKind, "photos" | "news" | "articles"> = {
+  photo: "photos",
+  news: "news",
+  article: "articles",
+};
+
+/** Veřejné čtení – RLS vrací pouze aktivní kategorie. */
+export async function fetchActiveCategories(kind: CategoryKind): Promise<CategoryRow[]> {
+  const { data, error } = await supabase
+    .from("categories")
+    .select("*")
+    .eq("kind", kind)
+    .eq("active", true)
+    .order("sort_order", { ascending: true })
+    .order("label", { ascending: true });
+  if (error) throw error;
+  return (data ?? []) as CategoryRow[];
+}
+
+/** Administrace – všechny kategorie napříč typy. */
+export async function fetchAllCategories(): Promise<CategoryRow[]> {
+  const { data, error } = await supabase
+    .from("categories")
+    .select("*")
+    .order("kind", { ascending: true })
+    .order("sort_order", { ascending: true })
+    .order("label", { ascending: true });
+  if (error) throw error;
+  return (data ?? []) as CategoryRow[];
+}
+
+export async function saveCategory(
+  values: Partial<CategoryRow> & { kind: CategoryKind; label: string },
+) {
+  const payload = {
+    kind: values.kind,
+    label: values.label.trim(),
+    value: (values.value?.trim() || values.label.trim()),
+    sort_order: values.sort_order ?? 0,
+    active: values.active ?? true,
+  };
+  const query = values.id
+    ? supabase.from("categories").update(payload).eq("id", values.id)
+    : supabase.from("categories").insert(payload);
+  const { error } = await query;
+  if (error) throw error;
+}
+
+export async function setCategoryActive(id: string, active: boolean) {
+  const { error } = await supabase.from("categories").update({ active }).eq("id", id);
+  if (error) throw error;
+}
+
+export async function moveCategory(list: CategoryRow[], id: string, direction: -1 | 1) {
+  const index = list.findIndex((c) => c.id === id);
+  const target = index + direction;
+  if (index < 0 || target < 0 || target >= list.length) return;
+  const a = list[index];
+  const b = list[target];
+  if (!a || !b) return;
+  const orderA = a.sort_order === b.sort_order ? index + 1 : b.sort_order;
+  const orderB = a.sort_order === b.sort_order ? target + 1 : a.sort_order;
+  const results = await Promise.all([
+    supabase.from("categories").update({ sort_order: orderA }).eq("id", a.id),
+    supabase.from("categories").update({ sort_order: orderB }).eq("id", b.id),
+  ]);
+
+  const failed = results.find((r) => r.error);
+  if (failed?.error) throw failed.error;
+}
+
+/** Počet záznamů, které kategorii používají. */
+export async function countCategoryUsage(category: CategoryRow): Promise<number> {
+  const { count, error } = await supabase
+    .from(CATEGORY_USAGE_TABLE[category.kind])
+    .select("id", { count: "exact", head: true })
+    .eq("category", category.value);
+  if (error) throw error;
+  return count ?? 0;
+}
+
+/** Smaže kategorii jen tehdy, pokud ji žádný záznam nepoužívá. */
+export async function deleteCategory(category: CategoryRow) {
+  const used = await countCategoryUsage(category);
+  if (used > 0) {
+    throw new Error(
+      `Kategorii „${category.label}“ nelze smazat – používá ji ${used} záznamů. Nejprve je přeřaďte jinam.`,
+    );
+  }
+  const { error } = await supabase.from("categories").delete().eq("id", category.id);
   if (error) throw error;
 }

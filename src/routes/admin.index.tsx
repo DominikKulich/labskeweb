@@ -11,7 +11,11 @@ import {
   Pencil,
   Upload,
   Megaphone,
+  Tags,
+  ArrowUp,
+  ArrowDown,
 } from "lucide-react";
+
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -20,11 +24,17 @@ import {
   fetchAllArticles,
   fetchAllPhotos,
   fetchAllNews,
+  fetchAllCategories,
+  fetchActiveCategories,
   fetchSubmissions,
   isCurrentUserAdmin,
   saveArticle,
   saveNews,
   savePhoto,
+  saveCategory,
+  setCategoryActive,
+  moveCategory,
+  deleteCategory,
   setPublished,
   setSubmissionStatus,
   slugify,
@@ -32,7 +42,10 @@ import {
   type ArticleRow,
   type PhotoRow,
   type NewsRow,
+  type CategoryRow,
+  type CategoryKind,
 } from "@/lib/cms";
+
 import { formatDate } from "@/components/site/StoryCard";
 import { cn } from "@/lib/utils";
 
@@ -57,14 +70,16 @@ export const Route = createFileRoute("/admin/")({
   component: AdminPage,
 });
 
-type Tab = "fotografie" | "clanky" | "aktuality" | "prispevky";
+type Tab = "fotografie" | "clanky" | "aktuality" | "prispevky" | "kategorie";
 
 const tabs: Array<{ id: Tab; label: string; icon: typeof ImageIcon }> = [
   { id: "fotografie", label: "Fotografie", icon: ImageIcon },
   { id: "clanky", label: "Články", icon: FileText },
   { id: "aktuality", label: "Aktuality", icon: Megaphone },
   { id: "prispevky", label: "Příspěvky", icon: Inbox },
+  { id: "kategorie", label: "Kategorie", icon: Tags },
 ];
+
 
 const fieldClass =
   "mt-2 w-full border border-input bg-background px-3.5 py-2.5 text-sm outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-ring";
@@ -226,6 +241,7 @@ function AdminPage() {
               {tab === "clanky" && <ArticlesPanel />}
               {tab === "aktuality" && <NewsPanel />}
               {tab === "prispevky" && <SubmissionsPanel />}
+              {tab === "kategorie" && <CategoriesPanel />}
             </div>
           </>
         )}
@@ -233,6 +249,262 @@ function AdminPage() {
     </div>
   );
 }
+
+/* ---------------- kategorie ---------------- */
+
+const categoryKindLabels: Record<CategoryKind, string> = {
+  photo: "Fotografie",
+  news: "Aktuality",
+  article: "Články",
+};
+
+const categoryKinds: CategoryKind[] = ["photo", "news", "article"];
+
+/** Dropdown aktivních kategorií daného typu. */
+function CategorySelect({
+  kind,
+  value,
+  onChange,
+}: {
+  kind: CategoryKind;
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  const { data = [], isLoading } = useQuery({
+    queryKey: ["categories", kind],
+    queryFn: () => fetchActiveCategories(kind),
+  });
+
+  const known = data.some((c) => c.value === value);
+
+  return (
+    <select
+      className={fieldClass}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      disabled={isLoading}
+    >
+      <option value="">— bez kategorie —</option>
+      {data.map((c) => (
+        <option key={c.id} value={c.value}>
+          {c.label}
+        </option>
+      ))}
+      {value && !known && <option value={value}>{value} (neaktivní)</option>}
+    </select>
+  );
+}
+
+const emptyCategory = (kind: CategoryKind): Partial<CategoryRow> => ({
+  kind,
+  label: "",
+  value: "",
+  sort_order: 0,
+  active: true,
+});
+
+function CategoriesPanel() {
+  const qc = useQueryClient();
+  const [draft, setDraft] = useState<(Partial<CategoryRow> & { kind: CategoryKind }) | null>(null);
+
+  const { data = [], isLoading } = useQuery({
+    queryKey: ["admin", "categories"],
+    queryFn: fetchAllCategories,
+  });
+
+  const invalidate = () => {
+    qc.invalidateQueries({ queryKey: ["admin", "categories"] });
+    qc.invalidateQueries({ queryKey: ["categories"] });
+  };
+
+  const save = useMutation({
+    mutationFn: (values: Partial<CategoryRow> & { kind: CategoryKind }) =>
+      saveCategory({ ...values, label: values.label ?? "" }),
+    onSuccess: () => {
+      toast.success("Kategorie uložena.");
+      setDraft(null);
+      invalidate();
+    },
+    onError: () => toast.error("Uložení se nepodařilo (hodnota musí být v rámci typu unikátní)."),
+  });
+
+  const toggle = useMutation({
+    mutationFn: ({ id, active }: { id: string; active: boolean }) => setCategoryActive(id, active),
+    onSuccess: invalidate,
+    onError: () => toast.error("Změna se nepodařila."),
+  });
+
+  const move = useMutation({
+    mutationFn: ({ list, id, direction }: { list: CategoryRow[]; id: string; direction: -1 | 1 }) =>
+      moveCategory(list, id, direction),
+    onSuccess: invalidate,
+    onError: () => toast.error("Změna pořadí se nepodařila."),
+  });
+
+  const remove = useMutation({
+    mutationFn: (category: CategoryRow) => deleteCategory(category),
+    onSuccess: () => {
+      toast.success("Kategorie smazána.");
+      invalidate();
+    },
+    onError: (err) =>
+      toast.error(err instanceof Error ? err.message : "Mazání se nepodařilo."),
+  });
+
+  return (
+    <div>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <h2 className="font-display text-xl">Kategorie ({data.length})</h2>
+      </div>
+      <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
+        Kategorie jsou oddělené podle typu obsahu. Smazat lze jen kategorii, kterou žádný záznam
+        nepoužívá — jinak ji raději deaktivujte.
+      </p>
+
+      {draft && (
+        <form
+          className="mt-8 grid gap-5 bg-background p-6 sm:grid-cols-2"
+          onSubmit={(e) => {
+            e.preventDefault();
+            save.mutate(draft);
+          }}
+        >
+          <Field label="Název *">
+            <input
+              required
+              className={fieldClass}
+              value={draft.label ?? ""}
+              onChange={(e) => setDraft({ ...draft, label: e.target.value })}
+            />
+          </Field>
+          <Field label="Technická hodnota (ukládá se k záznamům)">
+            <input
+              className={fieldClass}
+              placeholder={draft.kind === "photo" ? "např. historie" : "např. Dění"}
+              value={draft.value ?? ""}
+              onChange={(e) => setDraft({ ...draft, value: e.target.value })}
+              disabled={Boolean(draft.id)}
+            />
+          </Field>
+          <Field label="Pořadí">
+            <input
+              type="number"
+              className={fieldClass}
+              value={draft.sort_order ?? 0}
+              onChange={(e) => setDraft({ ...draft, sort_order: Number(e.target.value) })}
+            />
+          </Field>
+          <label className="flex items-center gap-3 self-end text-sm">
+            <input
+              type="checkbox"
+              checked={draft.active ?? true}
+              onChange={(e) => setDraft({ ...draft, active: e.target.checked })}
+            />
+            Aktivní
+          </label>
+          <div className="flex flex-wrap gap-3 sm:col-span-2">
+            <button type="submit" className={btnPrimary} disabled={save.isPending}>
+              Uložit
+            </button>
+            <button type="button" className={btnGhost} onClick={() => setDraft(null)}>
+              Zrušit
+            </button>
+          </div>
+        </form>
+      )}
+
+      {isLoading ? (
+        <p className="mt-8 text-sm text-muted-foreground">Načítám…</p>
+      ) : (
+        <div className="mt-10 space-y-12">
+          {categoryKinds.map((kind) => {
+            const list = data.filter((c) => c.kind === kind);
+            return (
+              <section key={kind}>
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <h3 className="font-display text-lg">{categoryKindLabels[kind]}</h3>
+                  <button
+                    type="button"
+                    className={btnGhost}
+                    onClick={() => setDraft({ ...emptyCategory(kind), kind })}
+                  >
+                    <span className="inline-flex items-center gap-2">
+                      <Plus className="size-3.5" /> Přidat kategorii
+                    </span>
+                  </button>
+                </div>
+
+                {list.length === 0 ? (
+                  <p className="mt-4 text-sm text-muted-foreground">Zatím žádné kategorie.</p>
+                ) : (
+                  <ul className="mt-4 divide-y divide-border border-t border-border">
+                    {list.map((c, index) => (
+                      <li key={c.id} className="flex flex-wrap items-center gap-4 py-4">
+                        <div className="min-w-[12rem] flex-1">
+                          <p className={cn("text-sm", !c.active && "text-muted-foreground")}>
+                            {c.label}
+                            {!c.active && " · neaktivní"}
+                          </p>
+                          <p className="mt-1 text-xs text-muted-foreground">{c.value}</p>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <button
+                            type="button"
+                            className={btnGhost}
+                            disabled={index === 0 || move.isPending}
+                            onClick={() => move.mutate({ list, id: c.id, direction: -1 })}
+                            aria-label="Posunout nahoru"
+                          >
+                            <ArrowUp className="size-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            className={btnGhost}
+                            disabled={index === list.length - 1 || move.isPending}
+                            onClick={() => move.mutate({ list, id: c.id, direction: 1 })}
+                            aria-label="Posunout dolů"
+                          >
+                            <ArrowDown className="size-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            className={btnGhost}
+                            onClick={() => toggle.mutate({ id: c.id, active: !c.active })}
+                          >
+                            {c.active ? "Deaktivovat" : "Aktivovat"}
+                          </button>
+                          <button
+                            type="button"
+                            className={btnGhost}
+                            onClick={() => setDraft({ ...c })}
+                          >
+                            <span className="inline-flex items-center gap-2">
+                              <Pencil className="size-3.5" /> Upravit
+                            </span>
+                          </button>
+                          <button
+                            type="button"
+                            className={btnGhost}
+                            onClick={() => remove.mutate(c)}
+                          >
+                            <span className="inline-flex items-center gap-2">
+                              <Trash2 className="size-3.5" /> Smazat
+                            </span>
+                          </button>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </section>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 
 /* ---------------- fotografie ---------------- */
 
@@ -329,17 +601,13 @@ function PhotosPanel() {
             className="sm:col-span-2"
           />
           <Field label="Kategorie">
-            <select
-              className={fieldClass}
-              value={draft.category ?? "historie"}
-              onChange={(e) => setDraft({ ...draft, category: e.target.value })}
-            >
-              <option value="historie">Historie</option>
-              <option value="soucasnost">Současnost</option>
-              <option value="labe">Labe</option>
-              <option value="promeny">Proměny</option>
-            </select>
+            <CategorySelect
+              kind="photo"
+              value={draft.category ?? ""}
+              onChange={(value) => setDraft({ ...draft, category: value })}
+            />
           </Field>
+
           <Field label="Zdroj">
             <input
               className={fieldClass}
@@ -549,12 +817,13 @@ function ArticlesPanel() {
             />
           </Field>
           <Field label="Kategorie">
-            <input
-              className={fieldClass}
+            <CategorySelect
+              kind="article"
               value={draft.category ?? ""}
-              onChange={(e) => setDraft({ ...draft, category: e.target.value })}
+              onChange={(value) => setDraft({ ...draft, category: value })}
             />
           </Field>
+
           <ImageUploadField
             label="Titulní fotografie"
             value={draft.cover_image_url ?? ""}
@@ -748,13 +1017,13 @@ function NewsPanel() {
             />
           </Field>
           <Field label="Kategorie / štítek">
-            <input
-              className={fieldClass}
-              placeholder="např. Sport, Komunita, Údržba, Omezení"
+            <CategorySelect
+              kind="news"
               value={draft.category ?? ""}
-              onChange={(e) => setDraft({ ...draft, category: e.target.value })}
+              onChange={(value) => setDraft({ ...draft, category: value })}
             />
           </Field>
+
           <Field label="Datum a čas">
             <input
               type="datetime-local"
