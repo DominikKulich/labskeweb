@@ -74,7 +74,7 @@ type Tab = "fotografie" | "clanky" | "aktuality" | "prispevky" | "kategorie";
 
 const tabs: Array<{ id: Tab; label: string; icon: typeof ImageIcon }> = [
   { id: "fotografie", label: "Fotografie", icon: ImageIcon },
-  { id: "clanky", label: "Články", icon: FileText },
+  { id: "clanky", label: "Příběhy", icon: FileText },
   { id: "aktuality", label: "Aktuality", icon: Megaphone },
   { id: "prispevky", label: "Příspěvky", icon: Inbox },
   { id: "kategorie", label: "Kategorie", icon: Tags },
@@ -255,7 +255,7 @@ function AdminPage() {
 const categoryKindLabels: Record<CategoryKind, string> = {
   photo: "Fotografie",
   news: "Aktuality",
-  article: "Články",
+  article: "Příběhy",
 };
 
 const categoryKinds: CategoryKind[] = ["photo", "news", "article"];
@@ -718,7 +718,7 @@ function PhotosPanel() {
   );
 }
 
-/* ---------------- články ---------------- */
+/* ---------------- příběhy ---------------- */
 
 const emptyArticle: Partial<ArticleRow> = {
   title: "",
@@ -779,7 +779,7 @@ function ArticlesPanel() {
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h2 className="font-display text-xl">Články ({data.length})</h2>
+        <h2 className="font-display text-xl">Příběhy ({data.length})</h2>
         <button type="button" className={btnPrimary} onClick={() => setDraft({ ...emptyArticle })}>
           <span className="inline-flex items-center gap-2">
             <Plus className="size-3.5" /> Přidat článek
