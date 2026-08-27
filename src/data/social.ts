@@ -1,4 +1,13 @@
-export const socialLinks = [
-  { label: "Facebook", url: "https://facebook.com/..." },
-  { label: "Instagram", url: "https://instagram.com/..." },
+export interface SocialLink {
+  label: string;
+  url: string;
+}
+
+export const socialLinks: SocialLink[] = [
+  { label: "Facebook", url: "https://www.facebook.com/labske.nabrezi/" },
+  { label: "Instagram", url: "" },
 ];
+
+export const activeSocialLinks = socialLinks.filter(
+  (l) => l.url.trim().length > 0,
+);
