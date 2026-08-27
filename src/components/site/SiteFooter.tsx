@@ -10,8 +10,7 @@ export function SiteFooter() {
               Labské <span className="font-light opacity-75">nábřeží</span>
             </p>
             <p className="mt-4 max-w-sm text-sm leading-relaxed opacity-70">
-              Nezávislá vizuální kronika Labského nábřeží ve Štětí. Sbíráme fotografie,
-              dokumenty a vzpomínky lidí, kteří u řeky žili.
+              Chceme vrátit Labské nábřeží ve Štětí do života. Místo pro setkávání, sport, odpočinek i společné zážitky — s respektem k jeho historii a příběhům.
             </p>
             <p className="mt-4 text-xs uppercase tracking-[0.16em] opacity-55">
               labskenabrezi.cz
