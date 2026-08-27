@@ -9,17 +9,18 @@ export const Route = createFileRoute("/o-projektu")({
   head: () => ({
     ...pageSeo({
       path: "/o-projektu",
-      title: "O projektu Labské nábřeží ve Štětí",
+      title: "O projektu Labské nábřeží ve Štětí — oživit břeh Labe",
       description:
-        "Labské nábřeží je nezávislý archiv fotografií, dokumentů a vzpomínek spojených s břehem Labe ve Štětí. Jak sbíráme a ověřujeme materiály.",
-      ogTitle: "O projektu Labské nábřeží",
-      ogDescription: "Nezávislý archiv fotografií a vzpomínek z nábřeží Labe ve Štětí.",
+        "Cílem Labského nábřeží je oživit břeh Labe ve Štětí — sport, akce, procházky i setkávání. Archiv fotografií a příběhů pomáhá budovat vztah k místu.",
+      ogTitle: "Labské nábřeží — oživit nábřeží ve Štětí",
+      ogDescription:
+        "Chceme, aby se na nábřeží ve Štětí něco dělo. Sport, akce, procházky — a zároveň příběhy a fotografie z historie místa.",
     }),
     scripts: [
       webPageJsonLd(
         "/o-projektu",
         "O projektu Labské nábřeží",
-        "Archiv fotografií, dokumentů a vzpomínek z nábřeží Labe ve Štětí.",
+        "Cílem je oživit Labské nábřeží ve Štětí a zároveň uchovávat jeho fotografie, dokumenty a příběhy.",
       ),
       breadcrumbJsonLd([{ name: "O projektu", path: "/o-projektu" }]),
     ],
@@ -51,8 +52,8 @@ function OProjektuPage() {
     <>
       <PageHeader
         eyebrow="O projektu"
-        title="Vizuální kronika jednoho místa a jeho proměn"
-        lead="Labské nábřeží uchovává vzpomínky, fotografie a příběhy břehu Labe ve Štětí. Vzniká zdola, z rodinných alb a vyprávění pamětníků."
+        title="Oživit Labské nábřeží ve Štětí"
+        lead="Chceme, aby nábřeží bylo místem, kam se lidé nebojí chodit — na sport, procházku, posezení i akce u vody. Archiv fotografií a historie je nástroj, jak navázat na příběh místa a budovat k němu vztah."
       />
 
       <section className="bg-background">
@@ -60,17 +61,19 @@ function OProjektuPage() {
           <Reveal>
             <div className="space-y-5 text-[1.05rem] leading-[1.75] text-foreground/85">
               <p>
-                Nábřeží je místo, které si každá generace pamatuje jinak. Pro jedny je to rampa
-                přívozu a dřevěné molo plovárny, pro druhé staveniště mostu, pro nejmladší
-                dlážděná promenáda s alejí.
+                Labské nábřeží ve Štětí má být místo, kde se něco děje. Představujeme si ho jako
+                břeh, kam lidé přijdou na discgolf, dětské hřiště, sport, procházku nebo posezení.
+                Místo, které si každý užije po svém.
               </p>
               <p>
-                Sbíráme fotografie, pohlednice, dokumenty i krátká vyprávění. Skládáme z nich
-                obraz jednoho břehu napříč sto třiceti lety — bez nostalgie a bez příkras.
+                Současně věříme, že kdo zná historii místa, má k němu blíž. Proto sbíráme
+                fotografie, dokumenty a vzpomínky — od přívozu přes plovárnu až po dnešní
+                promenádu. Archiv není cíl, je to způsob, jak nábřeží vrátit do povědomí a do
+                života města.
               </p>
               <p>
-                Projekt není městský ani firemní. Nemá logo ani oficiální razítko. Drží ho pár
-                lidí, kteří chtějí, aby fotografie z rodinných alb nezmizely spolu s alby.
+                Projekt není městský ani firemní. Drží ho lidé, kteří chtějí, aby fotografie z
+                rodinných alb nezmizely spolu s alby a aby břeh Labe znovu patřil Štětí.
               </p>
             </div>
           </Reveal>
@@ -101,22 +104,35 @@ function OProjektuPage() {
         </div>
       </section>
 
+      <section className="border-y border-border bg-paper">
+        <div className="mx-auto max-w-[1280px] px-5 py-16 sm:px-8 sm:py-20">
+          <Reveal>
+            <p className="eyebrow">Poděkování</p>
+            <p className="mt-4 max-w-3xl text-[1.02rem] leading-relaxed text-muted-foreground">
+              Děkujeme za poskytnuté fotografie, informace a historické materiály:
+            </p>
+            <p className="mt-3 max-w-3xl text-[1.05rem] leading-relaxed text-foreground/90">
+              Zdeněk Fořt · Miloš Bílek · Retro Štětí · Štětí · Vodní mlýny · Martin Krch
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
       <section className="bg-background">
         <div className="mx-auto max-w-[1280px] px-5 py-20 sm:px-8 sm:py-24">
           <Reveal className="bg-navy px-8 py-14 text-navy-foreground sm:px-14">
             <p className="eyebrow text-navy-foreground/60">Výzva</p>
             <h2 className="mt-4 max-w-2xl text-3xl leading-tight sm:text-4xl">
-              Máte historické fotografie nebo vzpomínky?
+              Máte historické fotografie, vzpomínky nebo informace k nábřeží? Ozvěte se nám.
             </h2>
             <p className="mt-5 max-w-xl text-sm leading-relaxed opacity-75">
-              Ozvěte se i s jediným snímkem. Pomůže i vzpomínka bez fotografie — často díky ní
-              dokážeme určit rok nebo místo u jiného snímku.
+              Pomůže i jediný snímek nebo vzpomínka — často díky ní dokážeme určit rok nebo místo u jiného snímku.
             </p>
             <Link
               to="/prispet"
               className="mt-9 inline-block border border-navy-foreground/60 px-7 py-3.5 text-[0.75rem] font-medium uppercase tracking-[0.18em] transition-colors hover:bg-navy-foreground hover:text-navy"
             >
-              Máte fotografii?
+              Napište nám
             </Link>
           </Reveal>
         </div>

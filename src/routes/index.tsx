@@ -11,7 +11,6 @@ import {
 } from "@/lib/cms";
 
 import { images, photos } from "@/data/photos";
-
 import { BeforeAfter } from "@/components/site/BeforeAfter";
 import { GalleryGrid } from "@/components/site/GalleryGrid";
 import { Reveal } from "@/components/site/Reveal";
@@ -65,7 +64,6 @@ export const Route = createFileRoute("/")({
       ogTitle: "Labské nábřeží Štětí — historie, fotografie a příběhy",
       ogDescription:
         "Historické i současné fotografie nábřeží ve Štětí, proměny břehu Labe a příběhy místa.",
-      image: "/images/nabrezi2.webp",
     }),
     scripts: [
       webPageJsonLd(
@@ -80,21 +78,25 @@ export const Route = createFileRoute("/")({
 
 const teasers = [
   {
-    title: "Přívoz přes Labe",
-    text: "Osmdesát let byl prám jediným spojením obou břehů. Jízdní řád se řídil výškou hladiny.",
+    title: "Přívoz",
+    year: "1537–1973",
+    text: "Přívoz je doložen od roku 1537, privilegium vydal Ferdinand I. v roce 1557. Poslední loď „Marie“ jezdila až do otevření mostu.",
     src: images.privoz,
   },
   {
-    title: "Stavba mostu",
-    text: "Tři roky staveniště, které natrvalo změnilo tvar i význam celého nábřeží.",
-    src: images.mostStavba,
+    title: "Ostrov",
+    year: "1908–1910",
+    text: "Ostrov byl skutečným ostrovem — od města jej dělilo rameno Labe. Při regulaci ho zasypala hlušina z výstavby jezu.",
+    src: images.plovarna2,
   },
   {
-    title: "Život u řeky",
-    text: "Plovárna na Ostrově, koupání a loďky. Řeka byla přirozeným prodloužením města.",
-    src: images.tehdy,
+    title: "Most",
+    year: "1973",
+    text: "Most postavil SEPAP kvůli železniční vlečce do papíren. Proto je společný pro vlaky i auta — a ukončil provoz přívozu.",
+    src: images.mostStavba,
   },
 ];
+
 
 function Index() {
   const { data: photoRows } = useQuery({
@@ -238,12 +240,11 @@ function Index() {
           <Reveal className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-end">
             <SectionHeading
               eyebrow="Historie místa"
-              title="Břeh, který se za sto let přepsal několikrát"
+              title="Tři témata, bez kterých se nábřeží nedá vyprávět"
             />
             <p className="text-[1.02rem] leading-relaxed text-muted-foreground lg:pb-2">
-              Nábřeží nebylo nikdy jen kus dlažby u vody. Bylo přístavištěm, staveništěm,
-              koupalištěm i hranicí, po které se rozlévala velká voda. Každá z těch rolí po sobě
-              nechala stopu — někdy v terénu, častěji jen na fotografiích.
+              Labe dávalo Štětí vodu, ryby, dopravu i obživu — a pravidelně si je bralo zpět.
+              Začněte přívozem, Ostrovem a mostem; zbytek příběhu čeká v devíti kapitolách.
             </p>
           </Reveal>
 
@@ -258,7 +259,8 @@ function Index() {
                     className="archival aspect-[4/5] w-full object-cover"
                   />
                 </div>
-                <h3 className="mt-5 text-2xl">{t.title}</h3>
+                <p className="mt-5 font-display text-xl tabular-nums text-river-deep">{t.year}</p>
+                <h3 className="mt-1 text-2xl">{t.title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{t.text}</p>
               </Reveal>
             ))}
@@ -269,7 +271,7 @@ function Index() {
               to="/historie"
               className="inline-flex items-center gap-2 text-[0.75rem] font-medium uppercase tracking-[0.16em]"
             >
-              <span className="link-editorial">Celá časová osa</span>
+              <span className="link-editorial">Celá historie nábřeží</span>
               <span aria-hidden>→</span>
             </Link>
           </div>
@@ -297,29 +299,29 @@ function Index() {
       </section>
 
       {/* PŘÍBĚHY */}
-     {featuredStories.length > 0 && (
-  <section className="border-y border-border bg-paper">
-    <div className="mx-auto max-w-[1280px] px-5 py-20 sm:px-8 sm:py-28">
-      <Reveal className="flex flex-wrap items-end justify-between gap-6">
-        <SectionHeading eyebrow="Texty" title="Příběhy od Labe" />
-        <Link
-          to="/pribehy"
-          className="text-[0.75rem] font-medium uppercase tracking-[0.16em]"
-        >
-          <span className="link-editorial">Všechny příběhy</span>
-        </Link>
-      </Reveal>
+      {featuredStories.length > 0 && (
+        <section className="border-y border-border bg-paper">
+          <div className="mx-auto max-w-[1280px] px-5 py-20 sm:px-8 sm:py-28">
+            <Reveal className="flex flex-wrap items-end justify-between gap-6">
+              <SectionHeading eyebrow="Texty" title="Příběhy od Labe" />
+              <Link
+                to="/pribehy"
+                className="text-[0.75rem] font-medium uppercase tracking-[0.16em]"
+              >
+                <span className="link-editorial">Všechny příběhy</span>
+              </Link>
+            </Reveal>
+            <div className="mt-14 grid gap-12 md:grid-cols-3 md:gap-8">
+              {featuredStories.slice(0, 3).map((s, i) => (
+                <Reveal key={s.id} delay={i * 90}>
+                  <StoryCard story={s} />
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
-      <div className="mt-14 grid gap-12 md:grid-cols-3 md:gap-8">
-        {featuredStories.slice(0, 3).map((s, i) => (
-          <Reveal key={s.id} delay={i * 90}>
-            <StoryCard story={s} />
-          </Reveal>
-        ))}
-      </div>
-    </div>
-  </section>
-)}
 
       {/* O PROJEKTU */}
       <section className="bg-background">
@@ -328,13 +330,14 @@ function Index() {
             <Reveal>
               <SectionHeading
                 eyebrow="O projektu"
-                title="Uchováváme vzpomínky, fotografie a příběhy Labského nábřeží"
+                title="Uchováváme příběhy nábřeží a chceme ho vrátit do života"
               />
               <div className="mt-6 space-y-4 text-[1.02rem] leading-relaxed text-muted-foreground">
                 <p>
-                  Labské nábřeží je nezávislý komunitní archiv. Shromažďujeme fotografie, dokumenty
-                  a vyprávění, která se váží k břehu Labe ve Štětí — od přívozu přes plovárnu až po
-                  dnešní promenádu.
+                  Labské nábřeží není jen archiv. Sbíráme fotografie, dokumenty a vzpomínky, které
+                  se váží k břehu Labe ve Štětí, protože kdo zná historii místa, má k němu blíž.
+                  Zároveň chceme, aby nábřeží bylo místem, kde se něco děje — sport, procházky,
+                  posezení, akce u vody.
                 </p>
                 <p>
                   Každý snímek popisujeme rokem, místem a zdrojem. Nechceme jen hezké obrázky:

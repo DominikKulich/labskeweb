@@ -54,8 +54,14 @@ export function SiteFooter() {
           </nav>
         </div>
 
-        <div className="mt-14 flex flex-col gap-2 border-t border-navy-foreground/15 pt-6 text-xs opacity-60 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Labské nábřeží</p>
+        <div className="mt-14 flex flex-col gap-3 border-t border-navy-foreground/15 pt-6 text-xs opacity-60 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-1 sm:gap-0">
+            <p>© {new Date().getFullYear()} Labské nábřeží</p>
+            <p className="max-w-md leading-relaxed">
+              Poděkování za fotografie a informace: Zdeněk Fořt, Miloš Bílek, Retro Štětí, Štětí,
+              Vodní mlýny, Martin Krch
+            </p>
+          </div>
           <p>
             Vytvořil{" "}
             <a

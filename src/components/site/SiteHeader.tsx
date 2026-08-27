@@ -69,7 +69,7 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
                 : "border-foreground/40 hover:bg-foreground hover:text-background",
             )}
           >
-            Máte fotografii?
+            Napište nám
           </Link>
         </nav>
 
@@ -91,7 +91,7 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
           className="border-t border-border bg-background text-foreground md:hidden"
         >
           <nav aria-label="Mobilní navigace" className="flex flex-col px-5 py-4 sm:px-8">
-            {[...nav, { to: "/prispet", label: "Máte fotografii?" } as const].map((item) => (
+            {[...nav, { to: "/prispet", label: "Napište nám" } as const].map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
