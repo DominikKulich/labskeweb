@@ -3,6 +3,9 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { PageHeader } from "@/components/site/PageHeader";
+import { SocialLinks } from "@/components/site/SocialLinks";
+import { activeSocialLinks } from "@/data/social";
+
 import { submitContribution } from "@/data/contributions";
 import type { ContributionInput } from "@/data/types";
 import { breadcrumbJsonLd, pageSeo, webPageJsonLd } from "@/lib/seo";
@@ -168,7 +171,14 @@ function PrispetPage() {
               <li className="rule-top pt-4">Rodinné fotografie, kde je nábřeží jen v pozadí</li>
               <li className="rule-top pt-4">Vzpomínky bez fotografií — pomáhají s datací</li>
             </ul>
+            {activeSocialLinks.length > 0 && (
+              <div className="mt-8 border-t border-border-strong pt-6">
+                <p className="eyebrow">Sledujte nás</p>
+                <SocialLinks className="mt-4" />
+              </div>
+            )}
           </aside>
+
         </div>
       </section>
     </>

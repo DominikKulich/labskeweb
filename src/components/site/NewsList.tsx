@@ -54,7 +54,7 @@ export function NewsItem({ item, compact = false }: { item: NewsRow; compact?: b
           src={imageUrl}
           alt={item.title}
           loading="lazy"
-          className="aspect-[4/3] w-full object-cover"
+          className="aspect-[4/3] w-full rounded-lg object-cover"
         />
       )}
     </article>

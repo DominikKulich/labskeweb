@@ -136,18 +136,18 @@ function Index() {
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(180deg, rgba(18,20,25,0.72) 0%, rgba(18,20,25,0.42) 38%, rgba(18,20,25,0.86) 100%)",
+              "linear-gradient(180deg, rgba(18,20,25,0.28) 0%, rgba(18,20,25,0.06) 34%, rgba(18,20,25,0.55) 100%)",
           }}
         />
-        <div aria-hidden className="absolute inset-0 bg-ink/25" />
         <div className="relative mx-auto flex min-h-[86vh] max-w-[1280px] flex-col justify-end px-5 pb-16 pt-32 sm:px-8 sm:pb-24">
-          <p className="eyebrow text-primary-foreground/75">Vizuální kronika · Labe</p>
-          <h1 className="mt-5 max-w-4xl text-balance text-5xl leading-[0.98] text-primary-foreground sm:text-7xl lg:text-[5.5rem]">
+          <p className="eyebrow text-primary-foreground/85 hero-text-shadow">Vizuální kronika · Labe</p>
+          <h1 className="hero-text-shadow mt-5 max-w-4xl text-balance text-5xl leading-[1.02] text-primary-foreground sm:text-7xl lg:text-[5.5rem]">
             Labské nábřeží
           </h1>
-          <p className="mt-6 max-w-xl font-display text-xl font-light text-primary-foreground/85 sm:text-2xl">
+          <p className="hero-text-shadow mt-6 max-w-xl text-xl font-normal text-primary-foreground/95 sm:text-2xl">
             Místo u Labe, které chceme vrátit do života.
           </p>
+
           <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
             <Link
               to="/galerie"
