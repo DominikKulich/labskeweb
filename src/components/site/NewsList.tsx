@@ -10,11 +10,15 @@ export function formatNewsDate(iso: string) {
 }
 
 export function NewsItem({ item, compact = false }: { item: NewsRow; compact?: boolean }) {
+  const imageUrl = item.image_url;
+  const hasImage = !!imageUrl;
+
   return (
     <article
       className={cn(
         "grid gap-5 border-t border-border pt-6",
-        !compact && item.image_url && "sm:grid-cols-[minmax(0,1fr)_minmax(0,0.42fr)] sm:gap-10",
+        !compact && hasImage && "sm:grid-cols-[minmax(0,1fr)_minmax(0,0.42fr)] sm:gap-10",
+        compact && hasImage && "sm:grid-cols-[minmax(0,1fr)_minmax(0,140px)] sm:items-start sm:gap-6",
       )}
     >
       <div>
@@ -45,9 +49,9 @@ export function NewsItem({ item, compact = false }: { item: NewsRow; compact?: b
         )}
       </div>
 
-      {!compact && item.image_url && (
+      {hasImage && (
         <img
-          src={item.image_url}
+          src={imageUrl}
           alt={item.title}
           loading="lazy"
           className="aspect-[4/3] w-full object-cover"
