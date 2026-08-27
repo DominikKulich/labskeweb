@@ -39,13 +39,13 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
     >
       <div className="mx-auto flex h-[68px] max-w-[1280px] items-center justify-between px-5 sm:px-8">
         <Link to="/" className="group block leading-none" aria-label="Labské nábřeží — Štětí">
-          <span className="block font-display text-[1.05rem] leading-none tracking-tight sm:text-[1.2rem]">
-            <span className="font-medium">Labské</span>{" "}
-            <span className="font-light">nábřeží</span>
-          </span>
-          <span className="mt-1.5 block text-[0.5rem] font-medium uppercase leading-none tracking-[0.42em] opacity-55 sm:text-[0.55rem]">
-            Štětí
-          </span>
+       <span className="block font-sans text-[1.05rem] font-medium leading-none tracking-tight sm:text-[1.2rem]">
+  Labské nábřeží
+</span>
+
+<span className="mt-1.5 block font-sans text-[0.5rem] font-medium uppercase leading-none tracking-[0.42em] sm:text-[0.55rem]">
+  Štětí
+</span>
         </Link>
 
         <nav aria-label="Hlavní navigace" className="hidden items-center gap-9 md:flex">
