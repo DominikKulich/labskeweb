@@ -58,18 +58,18 @@ export const Route = createFileRoute("/")({
   head: () => ({
     ...pageSeo({
       path: "/",
-      title: "Labské nábřeží Štětí | Historie, fotografie a příběhy",
+      title: "Labské nábřeží Štětí | Místo u řeky s příběhem",
       description:
-        "Labské nábřeží ve Štětí: historie i současnost břehu Labe, archivní i nové fotografie, proměny místa a příběhy lidí od řeky.",
-      ogTitle: "Labské nábřeží Štětí — historie, fotografie a příběhy",
+        "Labské nábřeží ve Štětí chceme vrátit do života: sport, procházky, dětské hřiště, discgolf, posezení a akce u Labe — a současně uchovat příběhy a historii tohoto místa.",
+      ogTitle: "Labské nábřeží Štětí — místo u řeky s příběhem",
       ogDescription:
-        "Historické i současné fotografie nábřeží ve Štětí, proměny břehu Labe a příběhy místa.",
+        "Nábřeží ve Štětí ožívá: sport, procházky, akce u Labe a kolem toho historie, fotografie a vzpomínky místa.",
     }),
     scripts: [
       webPageJsonLd(
         "/",
         "Labské nábřeží Štětí",
-        "Historie i současnost Labského nábřeží ve Štětí — fotografie, proměny a příběhy.",
+        "Místo u řeky ve Štětí, které ožívá sportem, akcemi a setkáváním — a současně uchovává příběhy a historii nábřeží.",
       ),
     ],
   }),
@@ -146,7 +146,7 @@ function Index() {
             Labské nábřeží
           </h1>
           <p className="mt-6 max-w-xl font-display text-xl font-light text-primary-foreground/85 sm:text-2xl">
-            Příběhy, proměny a vzpomínky z břehu Labe ve Štětí.
+            Místo u Labe, které chceme vrátit do života.
           </p>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
             <Link
@@ -156,10 +156,10 @@ function Index() {
               Prohlédnout galerii
             </Link>
             <Link
-              to="/historie"
+              to="/o-projektu"
               className="px-1 py-3.5 text-center text-[0.75rem] font-medium uppercase tracking-[0.18em] text-primary-foreground/85 hover:text-primary-foreground"
             >
-              <span className="link-editorial">Objevit historii</span>
+              <span className="link-editorial">O projektu</span>
             </Link>
           </div>
         </div>
@@ -330,18 +330,23 @@ function Index() {
             <Reveal>
               <SectionHeading
                 eyebrow="O projektu"
-                title="Uchováváme příběhy nábřeží a chceme ho vrátit do života"
+                title="Oživit Labské nábřeží ve Štětí"
               />
               <div className="mt-6 space-y-4 text-[1.02rem] leading-relaxed text-muted-foreground">
                 <p>
-                  Labské nábřeží není jen archiv. Sbíráme fotografie, dokumenty a vzpomínky, které
-                  se váží k břehu Labe ve Štětí, protože kdo zná historii místa, má k němu blíž.
-                  Zároveň chceme, aby nábřeží bylo místem, kde se něco děje — sport, procházky,
-                  posezení, akce u vody.
+                  Labské nábřeží ve Štětí má být místo, kde se něco děje. Představujeme si ho jako
+                  břeh, kam lidé přijdou na discgolf, dětské hřiště, sport, procházku nebo posezení.
+                  Místo, které si každý užije po svém.
                 </p>
                 <p>
-                  Každý snímek popisujeme rokem, místem a zdrojem. Nechceme jen hezké obrázky:
-                  chceme, aby se dalo dohledat, kdo je pořídil a co na nich je.
+                  Současně věříme, že kdo zná historii místa, má k němu blíž. Proto sbíráme
+                  fotografie, dokumenty a vzpomínky — od přívozu přes plovárnu až po dnešní
+                  promenádu. Archiv není cíl, je to způsob, jak nábřeží vrátit do povědomí a do
+                  života města.
+                </p>
+                <p>
+                  Projekt není městský ani firemní. Drží ho lidé, kteří chtějí, aby fotografie z
+                  rodinných alb nezmizely spolu s alby a aby břeh Labe znovu patřil Štětí.
                 </p>
               </div>
               <Link
@@ -366,7 +371,7 @@ function Index() {
                 to="/prispet"
                 className="mt-8 inline-block border border-ink px-7 py-3.5 text-[0.75rem] font-medium uppercase tracking-[0.18em] transition-colors hover:bg-ink hover:text-background"
               >
-                Máte fotografii?
+                Napište nám
               </Link>
             </Reveal>
           </div>
