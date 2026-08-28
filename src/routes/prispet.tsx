@@ -14,19 +14,20 @@ export const Route = createFileRoute("/prispet")({
   head: () => ({
     ...pageSeo({
       path: "/prispet",
-      title: "Máte fotografii? | Labské nábřeží Štětí",
+      title: "Napište nám | Labské nábřeží Štětí",
       description:
-        "Pošlete historickou fotografii nábřeží ve Štětí nebo vzpomínku na život u Labe. Originály vracíme, autora vždy uvádíme.",
-      ogTitle: "Máte fotografii? — Labské nábřeží",
-      ogDescription: "Sdílejte fotografii nebo vzpomínku na nábřeží a řeku Labe ve Štětí.",
+        "Máte dotaz, nápad nebo připomínku k Labskému nábřeží ve Štětí? Napište nám. Budeme rádi i za historické fotografie, dokumenty nebo vzpomínky.",
+      ogTitle: "Napište nám — Labské nábřeží",
+      ogDescription:
+        "Ozvěte se nám s dotazem, nápadem, připomínkou nebo podnětem k Labskému nábřeží ve Štětí.",
     }),
     scripts: [
       webPageJsonLd(
         "/prispet",
-        "Máte fotografii?",
-        "Formulář pro zaslání historické fotografie nebo vzpomínky z nábřeží ve Štětí.",
+        "Napište nám",
+        "Kontaktní formulář projektu Labské nábřeží ve Štětí.",
       ),
-      breadcrumbJsonLd([{ name: "Máte fotografii?", path: "/prispet" }]),
+      breadcrumbJsonLd([{ name: "Napište nám", path: "/prispet" }]),
     ],
   }),
   component: PrispetPage,
@@ -41,18 +42,22 @@ function PrispetPage() {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     const form = e.currentTarget;
     const fd = new FormData(form);
+
     const input: ContributionInput = {
       name: String(fd.get("name") ?? ""),
       email: String(fd.get("email") ?? ""),
-      year: String(fd.get("year") ?? ""),
-      place: String(fd.get("place") ?? ""),
+      year: "",
+      place: "",
       message: String(fd.get("message") ?? ""),
     };
 
     setPending(true);
+
     const res = await submitContribution(input);
+
     setPending(false);
 
     if (res.ok) {
@@ -67,9 +72,9 @@ function PrispetPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Máte fotografii?"
-        title="Pošlete fotografii nebo vzpomínku"
-        lead="Nemusíte nic skenovat. Stačí napsat, co máte — ozveme se a domluvíme se na dalším postupu."
+        eyebrow="Napište nám"
+        title="Máte dotaz, nápad nebo připomínku?"
+        lead="Napište nám cokoliv, co se týká Labského nábřeží ve Štětí. Může jít o dotaz, nápad, připomínku, nabídku spolupráce nebo třeba historickou fotografii či vzpomínku."
       />
 
       <section className="bg-background">
@@ -81,7 +86,6 @@ function PrispetPage() {
                 className="mb-8 border-l-2 border-river bg-paper px-5 py-4 text-sm leading-relaxed"
               >
                 Děkujeme. Zprávu jsme přijali a ozveme se na uvedený e-mail.
-
               </p>
             )}
 
@@ -91,12 +95,21 @@ function PrispetPage() {
                   <label htmlFor="name" className="eyebrow block">
                     Jméno *
                   </label>
-                  <input id="name" name="name" required autoComplete="name" className={fieldClass} />
+
+                  <input
+                    id="name"
+                    name="name"
+                    required
+                    autoComplete="name"
+                    className={fieldClass}
+                  />
                 </div>
+
                 <div>
                   <label htmlFor="email" className="eyebrow block">
                     E-mail *
                   </label>
+
                   <input
                     id="email"
                     name="email"
@@ -108,41 +121,17 @@ function PrispetPage() {
                 </div>
               </div>
 
-              <div className="grid gap-7 sm:grid-cols-2">
-                <div>
-                  <label htmlFor="year" className="eyebrow block">
-                    Rok pořízení (odhad)
-                  </label>
-                  <input
-                    id="year"
-                    name="year"
-                    placeholder="např. kolem 1965"
-                    className={fieldClass}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="place" className="eyebrow block">
-                    Místo
-                  </label>
-                  <input
-                    id="place"
-                    name="place"
-                    placeholder="např. rampa přívozu"
-                    className={fieldClass}
-                  />
-                </div>
-              </div>
-
               <div>
                 <label htmlFor="message" className="eyebrow block">
-                  Co máte nebo si pamatujete *
+                  Zpráva *
                 </label>
+
                 <textarea
                   id="message"
                   name="message"
                   required
-                  rows={7}
-                  placeholder="Popište fotografii, vzpomínku nebo dokument…"
+                  rows={8}
+                  placeholder="Napište nám svůj dotaz, nápad, připomínku nebo cokoliv dalšího…"
                   className={`${fieldClass} resize-y`}
                 />
               </div>
@@ -152,25 +141,34 @@ function PrispetPage() {
                 disabled={pending}
                 className="border border-ink px-8 py-3.5 text-[0.75rem] font-medium uppercase tracking-[0.18em] transition-colors hover:bg-ink hover:text-background disabled:opacity-50"
               >
-                {pending ? "Odesílám…" : "Odeslat příspěvek"}
+                {pending ? "Odesílám…" : "Odeslat zprávu"}
               </button>
 
               <p className="text-xs leading-relaxed text-muted-foreground">
-                Odesláním souhlasíte s tím, že vás můžeme kontaktovat kvůli upřesnění údajů.
-                Fotografie zveřejňujeme až po vaší výslovné dohodě.
+                Odesláním souhlasíte s tím, že vás můžeme kontaktovat v souvislosti
+                s vaší zprávou.
               </p>
             </form>
           </div>
 
           <aside className="bg-paper p-8 sm:p-10">
-            <h2 className="text-2xl leading-snug">Co se hodí nejvíc</h2>
-            <ul className="mt-6 space-y-4 text-sm leading-relaxed text-muted-foreground">
-              <li className="rule-top pt-4">Snímky přívozu, plovárny a starého překladiště</li>
-              <li className="rule-top pt-4">Fotografie ze stavby mostu, i neostré a amatérské</li>
-              <li className="rule-top pt-4">Povodňové snímky s viditelnou hladinou</li>
-              <li className="rule-top pt-4">Rodinné fotografie, kde je nábřeží jen v pozadí</li>
-              <li className="rule-top pt-4">Vzpomínky bez fotografií — pomáhají s datací</li>
-            </ul>
+            <h2 className="text-2xl leading-snug">Ozvěte se nám</h2>
+
+            <p className="mt-6 text-sm leading-relaxed text-muted-foreground">
+              Budeme rádi za vaše dotazy, podněty, připomínky i nápady k Labskému
+              nábřeží.
+            </p>
+
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              Pokud máte historické fotografie, dokumenty nebo vzpomínky spojené
+              s nábřežím a životem u Labe, můžete nám napsat i o nich.
+            </p>
+
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              Ozvat se můžete také v případě, že máte zájem o spolupráci nebo se
+              chcete do projektu nějak zapojit.
+            </p>
+
             {activeSocialLinks.length > 0 && (
               <div className="mt-8 border-t border-border-strong pt-6">
                 <p className="eyebrow">Sledujte nás</p>
@@ -178,7 +176,6 @@ function PrispetPage() {
               </div>
             )}
           </aside>
-
         </div>
       </section>
     </>

@@ -4,7 +4,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Image as ImageIcon,
   FileText,
-  Inbox,
   LogOut,
   Plus,
   Trash2,
@@ -26,7 +25,6 @@ import {
   fetchAllNews,
   fetchAllCategories,
   fetchActiveCategories,
-  fetchSubmissions,
   isCurrentUserAdmin,
   saveArticle,
   saveNews,
@@ -36,7 +34,6 @@ import {
   moveCategory,
   deleteCategory,
   setPublished,
-  setSubmissionStatus,
   slugify,
   uploadImage,
   type ArticleRow,
@@ -60,7 +57,7 @@ export const Route = createFileRoute("/admin/")({
       { title: "Správa obsahu | Labské nábřeží" },
       {
         name: "description",
-        content: "Interní rozhraní pro správu fotografií, článků a příspěvků projektu Labské nábřeží.",
+        content: "Interní rozhraní pro správu fotografií, příběhů, aktualit a kategorií projektu Labské nábřeží.",
       },
       { name: "robots", content: "noindex, nofollow" },
       { property: "og:title", content: "Správa obsahu — Labské nábřeží" },
@@ -70,13 +67,12 @@ export const Route = createFileRoute("/admin/")({
   component: AdminPage,
 });
 
-type Tab = "fotografie" | "clanky" | "aktuality" | "prispevky" | "kategorie";
+type Tab = "fotografie" | "clanky" | "aktuality" | "kategorie";
 
 const tabs: Array<{ id: Tab; label: string; icon: typeof ImageIcon }> = [
   { id: "fotografie", label: "Fotografie", icon: ImageIcon },
   { id: "clanky", label: "Příběhy", icon: FileText },
   { id: "aktuality", label: "Aktuality", icon: Megaphone },
-  { id: "prispevky", label: "Příspěvky", icon: Inbox },
   { id: "kategorie", label: "Kategorie", icon: Tags },
 ];
 
@@ -240,7 +236,6 @@ function AdminPage() {
               {tab === "fotografie" && <PhotosPanel />}
               {tab === "clanky" && <ArticlesPanel />}
               {tab === "aktuality" && <NewsPanel />}
-              {tab === "prispevky" && <SubmissionsPanel />}
               {tab === "kategorie" && <CategoriesPanel />}
             </div>
           </>
@@ -1131,88 +1126,6 @@ function NewsPanel() {
                   <Trash2 className="size-3.5" /> Smazat
                 </span>
               </button>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
-}
-
-/* ---------------- příspěvky ---------------- */
-
-function SubmissionsPanel() {
-  const qc = useQueryClient();
-  const { data = [], isLoading } = useQuery({
-    queryKey: ["admin", "submissions"],
-    queryFn: fetchSubmissions,
-  });
-
-  const invalidate = () => qc.invalidateQueries({ queryKey: ["admin", "submissions"] });
-
-  const status = useMutation({
-    mutationFn: ({ id, value }: { id: string; value: string }) => setSubmissionStatus(id, value),
-    onSuccess: invalidate,
-    onError: () => toast.error("Změna stavu se nepodařila."),
-  });
-
-  const remove = useMutation({
-    mutationFn: (id: string) => deleteRow("submissions", id),
-    onSuccess: () => {
-      toast.success("Příspěvek smazán.");
-      invalidate();
-    },
-    onError: () => toast.error("Mazání se nepodařilo."),
-  });
-
-  return (
-    <div>
-      <h2 className="font-display text-xl">Příspěvky veřejnosti ({data.length})</h2>
-      {isLoading ? (
-        <p className="mt-8 text-sm text-muted-foreground">Načítám…</p>
-      ) : data.length === 0 ? (
-        <p className="mt-8 text-sm text-muted-foreground">Zatím nedorazil žádný příspěvek.</p>
-      ) : (
-        <ul className="mt-8 space-y-5">
-          {data.map((s) => (
-            <li key={s.id} className="bg-background p-6">
-              <div className="flex flex-wrap items-baseline justify-between gap-3">
-                <p className="font-display text-lg">
-                  {s.name} <span className="text-sm text-muted-foreground">· {s.email}</span>
-                </p>
-                <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
-                  {formatDate(s.created_at)} · {s.status}
-                </p>
-              </div>
-              <p className="mt-3 text-xs text-muted-foreground">
-                {[s.approximate_year, s.place].filter(Boolean).join(" · ")}
-              </p>
-              <p className="mt-3 whitespace-pre-line text-sm leading-relaxed">{s.story}</p>
-              <div className="mt-5 flex flex-wrap gap-3">
-                <button
-                  type="button"
-                  className={btnGhost}
-                  onClick={() => status.mutate({ id: s.id, value: "reviewed" })}
-                >
-                  Označit jako zpracované
-                </button>
-                <button
-                  type="button"
-                  className={btnGhost}
-                  onClick={() => status.mutate({ id: s.id, value: "archived" })}
-                >
-                  Archivovat
-                </button>
-                <button
-                  type="button"
-                  className={btnGhost}
-                  onClick={() => {
-                    if (confirm("Smazat příspěvek?")) remove.mutate(s.id);
-                  }}
-                >
-                  Smazat
-                </button>
-              </div>
             </li>
           ))}
         </ul>
